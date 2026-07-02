@@ -2,7 +2,7 @@
     "name": "nheengeta",
     "displayName": "Nheengetá Notebooks",
     "description": "Polyglot notebooks powered by the .NET Interactive kernel — C#, F#, T-SQL, KQL, PowerShell, JavaScript, Python, R, HTML and Mermaid, all speaking together.",
-    "version": "0.1.10",
+    "version": "0.1.11",
     "publisher": "HermesSilva",
     "license": "MIT",
     "icon": "media/icon.png",
@@ -71,6 +71,14 @@
                 "mimeTypes": [
                     "text/vnd.mermaid"
                 ]
+            },
+            {
+                "id": "nheengeta-plot",
+                "displayName": "Nheengetá Plot",
+                "entrypoint": "./out/Renderer/PlotRenderer.js",
+                "mimeTypes": [
+                    "application/vnd.nheengeta.plot+json"
+                ]
             }
         ],
         "languages": [
@@ -81,6 +89,12 @@
                 ],
                 "aliases": [
                     "Nheengetá"
+                ]
+            },
+            {
+                "id": "math",
+                "aliases": [
+                    "Math (Nheengetá)"
                 ]
             }
         ],
@@ -257,8 +271,10 @@
         }
     },
     "scripts": {
-        "compile": "tsc -p ./ && npm run compile-renderer",
+        "compile": "tsc -p ./ && npm run compile-renderer && npm run compile-plot && npm run compile-math",
         "compile-renderer": "esbuild src/Renderer/MermaidRenderer.ts --bundle --format=esm --minify --outfile=out/Renderer/MermaidRenderer.js",
+        "compile-plot": "esbuild src/Renderer/PlotRenderer.ts --bundle --format=esm --minify --outfile=out/Renderer/PlotRenderer.js",
+        "compile-math": "esbuild src/Math/MathEngine.ts --bundle --format=cjs --platform=node --minify --outfile=out/Math/MathEngine.js",
         "watch": "tsc -watch -p ./",
         "package": "vsce package",
         "pack-lib": "npm pack"
@@ -274,6 +290,8 @@
         "@types/vscode": "^1.99.0",
         "@types/vscode-notebook-renderer": "^1.72.0",
         "esbuild": "^0.21.0",
+        "function-plot": "^1.25.0",
+        "mathjs": "^13.0.0",
         "mermaid": "^10.9.0",
         "typescript": "^5.3.0"
     }

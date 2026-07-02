@@ -25,6 +25,7 @@ const Languages: XLanguageInfo[] = [
     { Magic: "mermaid", VsCodeLanguage: "mermaid", KernelName: "mermaid" },
     { Magic: "python", VsCodeLanguage: "python", KernelName: "python" },
     { Magic: "r", VsCodeLanguage: "r", KernelName: "r" },
+    { Magic: "math", VsCodeLanguage: "math" },
     { Magic: "markdown", VsCodeLanguage: "markdown" }
 ];
 

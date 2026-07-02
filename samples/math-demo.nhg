@@ -1,0 +1,49 @@
+#!markdown
+
+# Math demo — mathjs + plot
+
+Células `#!math`: álgebra, derivadas, matrizes, unidades, complexos — e `plot()`.
+Variáveis e funções **persistem entre células math**.
+
+#!math
+
+# aritmética exata e constantes
+1/3 + 1/4
+sqrt(-4)
+e^(pi*i) + 1
+
+# unidades
+5 km / (12 minutes) to km/h
+
+#!math
+
+# álgebra simbólica
+simplify("3x + 2x + 7")
+derivative("x^3 + 2x^2 - 5x + 3", "x")
+
+#!math
+
+# matrizes
+A = [1, 2; 3, 4]
+det(A)
+inv(A)
+A * A
+
+#!math
+
+# funções persistem entre células
+f(x) = x^2 - 4x + 3
+g(x) = sin(2x) * e^(-x/5)
+
+f(0)
+f(2)
+
+#!math
+
+# plot de uma função definida acima
+plot("f(x)", { from: -1, to: 5, title: "f(x) = x^2 - 4x + 3" })
+
+#!math
+
+# múltiplas curvas, domínio custom
+plot(["sin(x)", "cos(x)", "g(x)"], { from: -6.28, to: 6.28, title: "Trigonometria + amortecida" })
