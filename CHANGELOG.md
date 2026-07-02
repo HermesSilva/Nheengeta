@@ -4,9 +4,23 @@ All notable changes to **Nheengetá Notebooks** are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com) and the
 project adheres to [Semantic Versioning](https://semver.org).
 
-## [0.1.16] — 2026-07-02
+## [0.1.25] — 2026-07-02
 
 First public preview. Everything below shipped across the 0.1.x series.
+
+### Zero-setup (novice-friendly)
+- SQL cells with no connection **auto-connect** to the default LocalDB
+  instance (discovered via `sqllocaldb`); manual `#!connect` always wins.
+- Python cells with no connection auto-detect the Jupyter kernelspec and,
+  when missing, **install jupyter + ipykernel automatically via pip**
+  (progress reported in the cell output). The pip user Scripts directory is
+  added to the kernel PATH automatically; ipykernel is pinned to 6.x
+  (version 7 hangs the dotnet-interactive jupyter connector).
+- sql/kql/python/r cells route automatically to the kernel created by their
+  `#!connect`; when nothing can be resolved, the error is a copy-ready
+  connect instruction instead of a stack trace.
+- Language validation suite (`test-languages.js`) exercising every tongue
+  end-to-end, with `--strict` mode for fully-equipped machines.
 
 ### Notebook core
 - `.nhg` notebooks: plain-text, diff-friendly cells (same layout as `.dib`),
