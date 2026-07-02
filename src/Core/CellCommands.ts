@@ -51,6 +51,7 @@ export class XCellCommands {
             { label: "KQL", description: "#!kql — needs #!connect kusto", LanguageId: "kql", iconPath: icon("kql") },
             { label: "HTML", description: "#!html — rendered inline", LanguageId: "html", iconPath: icon("html") },
             { label: "Mermaid", description: "#!mermaid — diagram", LanguageId: "mermaid", iconPath: icon("mermaid") },
+            { label: "Math", description: "#!math — mathjs + plot()", LanguageId: "math", iconPath: icon("math") },
             { label: "", kind: vscode.QuickPickItemKind.Separator },
             { label: "$(list-selection) All languages…", description: "native language picker", Native: true }
         ];

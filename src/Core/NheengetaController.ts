@@ -26,10 +26,13 @@ export interface XVariableInfo {
     Value: string;
 }
 
+import { EvaluateMath } from "../Math/MathEngine";
+
 export const NotebookType = "nheengeta";
-const SupportedLanguages = ["csharp", "fsharp", "powershell", "javascript", "sql", "kql", "html", "mermaid", "python", "r"];
+const SupportedLanguages = ["csharp", "fsharp", "powershell", "javascript", "sql", "kql", "html", "mermaid", "python", "r", "math"];
 
 export const MermaidMimeType = "text/vnd.mermaid";
+export const PlotMimeType = "application/vnd.nheengeta.plot+json";
 
 /** Connector nuget packages loaded on demand when #!connect <name> is used. */
 const ConnectorPackages: Record<string, string> = {
@@ -84,6 +87,37 @@ export class XNheengetaController {
             await this._Kernel.Restart();
             void vscode.window.showInformationMessage("Nheengetá: kernel restarted.");
         }
+    }
+
+    // ─── local math execution (mathjs) ───────────────────────────────────────
+
+    private readonly _MathScopes = new Map<string, Record<string, unknown>>();
+
+    private async ExecuteMath(pCode: string, pCell: vscode.NotebookCell, pExecution: vscode.NotebookCellExecution): Promise<boolean> {
+        const key = pCell.notebook.uri.toString();
+        let scope = this._MathScopes.get(key);
+        if (!scope) {
+            scope = {};
+            this._MathScopes.set(key, scope);
+        }
+        const result = EvaluateMath(pCode, scope);
+        if (result.Results.length > 0) {
+            await pExecution.appendOutput(new vscode.NotebookCellOutput([
+                vscode.NotebookCellOutputItem.text(result.Results.join("\n"), "text/plain")
+            ]));
+        }
+        for (const plot of result.Plots) {
+            await pExecution.appendOutput(new vscode.NotebookCellOutput([
+                vscode.NotebookCellOutputItem.json(plot, PlotMimeType)
+            ]));
+        }
+        if (result.Error) {
+            await pExecution.appendOutput(new vscode.NotebookCellOutput([
+                vscode.NotebookCellOutputItem.error(CleanError(result.Error))
+            ]));
+            return false;
+        }
+        return true;
     }
 
     // ─── local JavaScript execution (Node) ───────────────────────────────────
@@ -185,6 +219,16 @@ export class XNheengetaController {
                 for (const output of outputs)
                     await execution.appendOutput(output);
                 execution.end(true, Date.now());
+                return;
+            }
+
+            // Math cells evaluate in-process with mathjs; scope persists per
+            // notebook, plots render through the PlotRenderer.
+            if (languageId === "math") {
+                const ok = await this.ExecuteMath(code, pCell, execution);
+                if (ok)
+                    this._OnDidExecute.fire();
+                execution.end(ok, Date.now());
                 return;
             }
 

@@ -22,6 +22,7 @@ const MagicItems: XMagicItem[] = [
     { Magic: "kql", Detail: "KQL cell (needs #!connect kusto)", Kind: vscode.CompletionItemKind.Value, Sort: "1kql" },
     { Magic: "html", Detail: "HTML cell", Kind: vscode.CompletionItemKind.Value, Sort: "1html" },
     { Magic: "mermaid", Detail: "Mermaid diagram cell", Kind: vscode.CompletionItemKind.Value, Sort: "1mermaid" },
+    { Magic: "math", Detail: "Math cell (mathjs + plot)", Kind: vscode.CompletionItemKind.Value, Sort: "1math" },
     { Magic: "markdown", Detail: "Markdown cell", Kind: vscode.CompletionItemKind.Value, Sort: "1markdown" },
     { Magic: "python", Detail: "Python cell (needs #!connect jupyter --kernel-name python)", Kind: vscode.CompletionItemKind.Value, Sort: "1python" },
     { Magic: "r", Detail: "R cell (needs #!connect jupyter --kernel-name r)", Kind: vscode.CompletionItemKind.Value, Sort: "1r" },
