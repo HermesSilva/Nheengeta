@@ -18,7 +18,7 @@ e^(pi*i) + 1
 #!math
 
 # álgebra simbólica
-simplify("3x + 2x + 7")
+simplify("3x + 2x + 9")
 derivative("x^3 + 2x^2 - 5x + 3", "x")
 
 #!math

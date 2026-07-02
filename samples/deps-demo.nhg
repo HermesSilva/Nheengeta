@@ -1,0 +1,26 @@
+#!markdown
+
+# Dependencies demo — `#!use`
+
+Uma linha instala pacotes com o gerenciador certo da linguagem da célula:
+**C#/F# → nuget · JavaScript → npm · Python → pip · PowerShell → PSGallery · R → CRAN**
+
+#!javascript
+
+#!use lodash
+const _ = require("lodash");
+console.log(_.chunk([1, 2, 3, 4, 5, 6], 2));
+console.log(_.camelCase("nheengeta fala muitas linguas"));
+
+#!csharp
+
+#!use Humanizer
+using Humanizer;
+Console.WriteLine("nheengeta_speaks_many_tongues".Humanize());
+Console.WriteLine(TimeSpan.FromDays(456).Humanize(3));
+
+#!pwsh
+
+# PSGallery: instala só se faltar (exemplo)
+#!use PSReadLine
+(Get-Module -ListAvailable PSReadLine | Select-Object -First 1).Version.ToString()
