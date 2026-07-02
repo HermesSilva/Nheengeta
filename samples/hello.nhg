@@ -1,0 +1,69 @@
+#!markdown
+
+# Nheengetá — hello
+
+Run each cell with `Shift+Enter`. First run offers to install the kernel if missing.
+
+#!csharp
+
+Console.WriteLine("Nheengetá speaks!");
+var answer = 40 + 2;
+answer
+
+#!csharp
+
+// variable sharing inside the C# kernel
+Enumerable.Range(1, 5).Select(i => $"line {i} of {answer}")
+
+#!fsharp
+
+[1..5] |> List.map (fun x -> x * x)
+
+#!pwsh
+
+Get-Date | Out-String
+
+#!javascript
+
+console.log("JS also speaks: " + (6 * 7));
+
+#!html
+
+<b style="color:#00a878">HTML cell rendered inline</b>
+
+#!mermaid
+
+flowchart LR
+    Think --> Test --> Confirm
+
+#!markdown
+
+## SQL — connect once, then query
+
+The first `#!connect mssql` in a session downloads the connector from nuget
+automatically (needs network once; cached after). Point it at any SQL Server —
+e.g. a LocalDB instance:
+
+#!csharp
+
+#!connect mssql --kernel-name mydb "Server=(localdb)\\MSSQLLocalDB;Integrated Security=true;TrustServerCertificate=true"
+
+#!sql
+
+-- after connecting, SQL cells run against the connection:
+-- #!sql-mydb is also available for multiple connections
+SELECT name FROM sys.databases;
+
+#!markdown
+
+## Python — via a local Jupyter install
+
+Requires `pip install jupyter` (any Python with a `python3` kernelspec):
+
+#!csharp
+
+#!connect jupyter --kernel-name python --kernel-spec python3
+
+#!python
+
+print("Python also speaks: " + str(6 * 7))
