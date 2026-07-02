@@ -2,7 +2,7 @@
     "name": "nheengeta",
     "displayName": "Nheengetá Notebooks",
     "description": "Polyglot notebooks powered by the .NET Interactive kernel — C#, F#, T-SQL, KQL, PowerShell, JavaScript, Python, R, HTML and Mermaid, all speaking together.",
-    "version": "0.1.17",
+    "version": "0.1.18",
     "publisher": "HermesSilva",
     "license": "MIT",
     "icon": "media/icon.png",
@@ -150,6 +150,15 @@
                 }
             },
             {
+                "command": "Nheengeta.RunCell",
+                "title": "Run Cell — execute only this cell",
+                "category": "Nheengetá",
+                "icon": {
+                    "light": "media/toolbar/run.svg",
+                    "dark": "media/toolbar/run.svg"
+                }
+            },
+            {
                 "command": "Nheengeta.RunToHere",
                 "title": "Run to Here — execute every cell from the top to this one",
                 "category": "Nheengetá",
@@ -228,6 +237,11 @@
         },
         "menus": {
             "notebook/cell/title": [
+                {
+                    "command": "Nheengeta.RunCell",
+                    "when": "notebookType == nheengeta && notebookCellType == code",
+                    "group": "inline@0"
+                },
                 {
                     "command": "Nheengeta.SelectCellLanguage",
                     "when": "notebookType == nheengeta && notebookCellType == code",

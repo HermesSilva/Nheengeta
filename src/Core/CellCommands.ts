@@ -15,6 +15,7 @@ export class XCellCommands {
         pContext.subscriptions.push(
             vscode.commands.registerCommand("Nheengeta.CopyCellOutput", (pCell?: vscode.NotebookCell) => this.CopyOutput(pCell)),
             vscode.commands.registerCommand("Nheengeta.SelectCellLanguage", (pCell?: vscode.NotebookCell) => this.SelectLanguage(pCell)),
+            vscode.commands.registerCommand("Nheengeta.RunCell", (pCell?: vscode.NotebookCell) => this.RunCell(pCell)),
             vscode.commands.registerCommand("Nheengeta.RunToHere", (pCell?: vscode.NotebookCell) => this.RunToHere(pCell)),
             vscode.commands.registerCommand("Nheengeta.AddPackage", (pCell?: vscode.NotebookCell) => this.AddPackage(pCell)),
             vscode.commands.registerCommand("Nheengeta.ExportCellOutput", (pCell?: vscode.NotebookCell) => this.ExportOutput(pCell)));
@@ -73,6 +74,18 @@ export class XCellCommands {
         }
         if (pick.LanguageId)
             await vscode.languages.setTextDocumentLanguage(cell.document, pick.LanguageId);
+    }
+
+    // ─── Run this cell only ──────────────────────────────────────────────────
+
+    private static async RunCell(pCell?: vscode.NotebookCell): Promise<void> {
+        const cell = this.TargetCell(pCell);
+        if (!cell)
+            return;
+        await vscode.commands.executeCommand("notebook.cell.execute", {
+            ranges: [{ start: cell.index, end: cell.index + 1 }],
+            document: cell.notebook.uri
+        });
     }
 
     // ─── Run to here ─────────────────────────────────────────────────────────
