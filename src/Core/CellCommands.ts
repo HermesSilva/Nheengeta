@@ -32,12 +32,40 @@ export class XCellCommands {
         const cell = this.TargetCell(pCell);
         if (!cell)
             return;
-        // Focus the cell, then delegate to the native picker (proper language
-        // icons from the icon theme; same UI as the status-bar language mode).
-        const editor = vscode.window.activeNotebookEditor;
-        if (editor && editor.notebook === cell.notebook)
-            editor.selection = new vscode.NotebookRange(cell.index, cell.index + 1);
-        await vscode.commands.executeCommand("notebook.cell.changeLanguage");
+
+        interface XLanguagePick extends vscode.QuickPickItem { LanguageId?: string; Native?: boolean; }
+        // $(bug) marks languages with Debug Cell support.
+        const picks: XLanguagePick[] = [
+            { label: "C#", description: "#!csharp", LanguageId: "csharp" },
+            { label: "F#", description: "#!fsharp", LanguageId: "fsharp" },
+            { label: "PowerShell $(bug)", description: "#!pwsh — debuggable", LanguageId: "powershell" },
+            { label: "JavaScript $(bug)", description: "#!javascript — debuggable", LanguageId: "javascript" },
+            { label: "Python $(bug)", description: "#!python — debuggable · needs #!connect jupyter", LanguageId: "python" },
+            { label: "R", description: "#!r — needs #!connect jupyter", LanguageId: "r" },
+            { label: "SQL", description: "#!sql — needs #!connect mssql", LanguageId: "sql" },
+            { label: "KQL", description: "#!kql — needs #!connect kusto", LanguageId: "kql" },
+            { label: "HTML", description: "#!html — rendered inline", LanguageId: "html" },
+            { label: "Mermaid", description: "#!mermaid — diagram", LanguageId: "mermaid" },
+            { label: "", kind: vscode.QuickPickItemKind.Separator },
+            { label: "$(list-selection) All languages…", description: "native language picker", Native: true }
+        ];
+
+        const pick = await vscode.window.showQuickPick(picks, {
+            title: "Nheengetá — cell language ($(bug) = debuggable)",
+            placeHolder: `Current: ${cell.document.languageId}`
+        });
+        if (!pick)
+            return;
+
+        if (pick.Native) {
+            const editor = vscode.window.activeNotebookEditor;
+            if (editor && editor.notebook === cell.notebook)
+                editor.selection = new vscode.NotebookRange(cell.index, cell.index + 1);
+            await vscode.commands.executeCommand("notebook.cell.changeLanguage");
+            return;
+        }
+        if (pick.LanguageId)
+            await vscode.languages.setTextDocumentLanguage(cell.document, pick.LanguageId);
     }
 
     // ─── Run to here ─────────────────────────────────────────────────────────
