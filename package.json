@@ -2,7 +2,7 @@
     "name": "nheengeta",
     "displayName": "Nheengetá Notebooks",
     "description": "Polyglot notebooks powered by the .NET Interactive kernel — C#, F#, T-SQL, KQL, PowerShell, JavaScript, Python, R, HTML and Mermaid, all speaking together.",
-    "version": "0.1.18",
+    "version": "0.1.19",
     "publisher": "HermesSilva",
     "license": "MIT",
     "icon": "media/icon.png",
@@ -239,42 +239,42 @@
             "notebook/cell/title": [
                 {
                     "command": "Nheengeta.RunCell",
-                    "when": "notebookType == nheengeta && notebookCellType == code",
+                    "when": "notebookType == nheengeta",
                     "group": "inline@0"
                 },
                 {
                     "command": "Nheengeta.SelectCellLanguage",
-                    "when": "notebookType == nheengeta && notebookCellType == code",
+                    "when": "notebookType == nheengeta",
                     "group": "inline@1"
                 },
                 {
                     "command": "Nheengeta.RunToHere",
-                    "when": "notebookType == nheengeta && notebookCellType == code",
+                    "when": "notebookType == nheengeta",
                     "group": "inline@2"
                 },
                 {
                     "command": "Nheengeta.DebugCell",
-                    "when": "notebookType == nheengeta && notebookCellType == code",
+                    "when": "notebookType == nheengeta",
                     "group": "inline@3"
                 },
                 {
                     "command": "Nheengeta.AskAi",
-                    "when": "notebookType == nheengeta && notebookCellType == code",
+                    "when": "notebookType == nheengeta",
                     "group": "inline@4"
                 },
                 {
                     "command": "Nheengeta.AddPackage",
-                    "when": "notebookType == nheengeta && notebookCellType == code",
+                    "when": "notebookType == nheengeta",
                     "group": "inline@5"
                 },
                 {
                     "command": "Nheengeta.CopyCellOutput",
-                    "when": "notebookType == nheengeta && notebookCellType == code",
+                    "when": "notebookType == nheengeta",
                     "group": "inline@6"
                 },
                 {
                     "command": "Nheengeta.ExportCellOutput",
-                    "when": "notebookType == nheengeta && notebookCellType == code",
+                    "when": "notebookType == nheengeta",
                     "group": "inline@7"
                 }
             ],
