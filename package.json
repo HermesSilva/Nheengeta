@@ -1,0 +1,279 @@
+{
+    "name": "nheengeta",
+    "displayName": "Nheengetá Notebooks",
+    "description": "Polyglot notebooks powered by the .NET Interactive kernel — C#, F#, T-SQL, KQL, PowerShell, JavaScript, Python, R, HTML and Mermaid, all speaking together.",
+    "version": "0.1.6",
+    "publisher": "HermesSilva",
+    "license": "MIT",
+    "icon": "media/icon.png",
+    "homepage": "https://github.com/hermessilva/DASE50#readme",
+    "bugs": {
+        "url": "https://github.com/hermessilva/DASE50/issues"
+    },
+    "keywords": [
+        "notebook",
+        "polyglot",
+        "dotnet-interactive",
+        "csharp",
+        "fsharp",
+        "sql",
+        "kql",
+        "interactive"
+    ],
+    "galleryBanner": {
+        "color": "#1e1e1e",
+        "theme": "dark"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/hermessilva/DASE50.git"
+    },
+    "engines": {
+        "vscode": "^1.99.0"
+    },
+    "categories": [
+        "Notebooks",
+        "Data Science",
+        "Programming Languages"
+    ],
+    "activationEvents": [
+        "onNotebook:nheengeta",
+        "onCommand:Nheengeta.New",
+        "onCommand:Nheengeta.Open"
+    ],
+    "main": "./out/ExtensionMain.js",
+    "contributes": {
+        "configurationDefaults": {
+            "notebook.cellToolbarLocation": {
+                "nheengeta": "left"
+            },
+            "notebook.lineNumbers": "on",
+            "debug.allowBreakpointsEverywhere": true,
+            "debug.inlineValues": "on"
+        },
+        "notebooks": [
+            {
+                "type": "nheengeta",
+                "displayName": "Nheengetá Notebook",
+                "selector": [
+                    {
+                        "filenamePattern": "*.nhg"
+                    }
+                ]
+            }
+        ],
+        "notebookRenderer": [
+            {
+                "id": "nheengeta-mermaid",
+                "displayName": "Nheengetá Mermaid",
+                "entrypoint": "./out/Renderer/MermaidRenderer.js",
+                "mimeTypes": [
+                    "text/vnd.mermaid"
+                ]
+            }
+        ],
+        "languages": [
+            {
+                "id": "nheengeta",
+                "extensions": [
+                    ".nhg"
+                ],
+                "aliases": [
+                    "Nheengetá"
+                ]
+            }
+        ],
+        "commands": [
+            {
+                "command": "Nheengeta.New",
+                "title": "New Nheengetá Notebook",
+                "category": "Nheengetá",
+                "icon": "$(notebook)"
+            },
+            {
+                "command": "Nheengeta.Open",
+                "title": "Open Nheengetá Notebook",
+                "category": "Nheengetá",
+                "icon": "$(folder-opened)"
+            },
+            {
+                "command": "Nheengeta.RestartKernel",
+                "title": "Restart Kernel",
+                "category": "Nheengetá",
+                "icon": "$(refresh)"
+            },
+            {
+                "command": "Nheengeta.InstallKernel",
+                "title": "Install .NET Interactive Kernel",
+                "category": "Nheengetá",
+                "icon": "$(cloud-download)"
+            },
+            {
+                "command": "Nheengeta.CopyCellOutput",
+                "title": "Copy Cell Output",
+                "category": "Nheengetá",
+                "icon": "$(copy)"
+            },
+            {
+                "command": "Nheengeta.SelectCellLanguage",
+                "title": "Select Cell Language",
+                "category": "Nheengetá",
+                "icon": "$(globe)"
+            },
+            {
+                "command": "Nheengeta.RunToHere",
+                "title": "Run All Up to This Cell",
+                "category": "Nheengetá",
+                "icon": "$(run-above)"
+            },
+            {
+                "command": "Nheengeta.ExportCellOutput",
+                "title": "Export Cell Output to File",
+                "category": "Nheengetá",
+                "icon": "$(save-as)"
+            },
+            {
+                "command": "Nheengeta.DebugCell",
+                "title": "Debug Cell (JavaScript, Python, PowerShell)",
+                "category": "Nheengetá",
+                "icon": "$(debug-alt)"
+            },
+            {
+                "command": "Nheengeta.RefreshVariables",
+                "title": "Refresh Variables",
+                "category": "Nheengetá",
+                "icon": "$(refresh)"
+            },
+            {
+                "command": "Nheengeta.EditVariable",
+                "title": "Set Value",
+                "category": "Nheengetá",
+                "icon": "$(edit)"
+            },
+            {
+                "command": "Nheengeta.AskAi",
+                "title": "Ask AI (fix, explain, improve)",
+                "category": "Nheengetá",
+                "icon": "$(sparkle)"
+            }
+        ],
+        "viewsContainers": {
+            "panel": [
+                {
+                    "id": "nheengeta",
+                    "title": "Nheengetá",
+                    "icon": "media/icon.svg"
+                }
+            ]
+        },
+        "views": {
+            "nheengeta": [
+                {
+                    "id": "nheengetaVariables",
+                    "name": "Variables",
+                    "icon": "media/icon.svg",
+                    "contextualTitle": "Nheengetá Variables"
+                }
+            ]
+        },
+        "menus": {
+            "notebook/cell/title": [
+                {
+                    "command": "Nheengeta.SelectCellLanguage",
+                    "when": "notebookType == nheengeta && notebookCellType == code",
+                    "group": "inline@1"
+                },
+                {
+                    "command": "Nheengeta.RunToHere",
+                    "when": "notebookType == nheengeta && notebookCellType == code",
+                    "group": "inline@2"
+                },
+                {
+                    "command": "Nheengeta.DebugCell",
+                    "when": "notebookType == nheengeta && notebookCellType == code",
+                    "group": "inline@3"
+                },
+                {
+                    "command": "Nheengeta.AskAi",
+                    "when": "notebookType == nheengeta && notebookCellType == code",
+                    "group": "inline@4"
+                },
+                {
+                    "command": "Nheengeta.CopyCellOutput",
+                    "when": "notebookType == nheengeta && notebookCellType == code",
+                    "group": "inline@5"
+                },
+                {
+                    "command": "Nheengeta.ExportCellOutput",
+                    "when": "notebookType == nheengeta && notebookCellType == code",
+                    "group": "inline@6"
+                }
+            ],
+            "notebook/toolbar": [
+                {
+                    "command": "Nheengeta.RestartKernel",
+                    "when": "notebookType == nheengeta",
+                    "group": "navigation@1"
+                }
+            ],
+            "view/title": [
+                {
+                    "command": "Nheengeta.RefreshVariables",
+                    "when": "view == nheengetaVariables",
+                    "group": "navigation@1"
+                }
+            ],
+            "view/item/context": [
+                {
+                    "command": "Nheengeta.EditVariable",
+                    "when": "view == nheengetaVariables && viewItem == nheengeta-variable",
+                    "group": "inline@1"
+                }
+            ]
+        },
+        "configuration": {
+            "title": "Nheengetá",
+            "properties": {
+                "nheengeta.dotnetPath": {
+                    "type": "string",
+                    "default": "dotnet",
+                    "description": "Path to the dotnet executable used to launch the .NET Interactive kernel."
+                },
+                "nheengeta.kernelArgs": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "default": [],
+                    "description": "Extra arguments passed to `dotnet interactive stdio`."
+                },
+                "nheengeta.handleIpynb": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Also open .ipynb files with the Nheengetá notebook editor (may conflict with Jupyter/Polyglot extensions)."
+                }
+            }
+        }
+    },
+    "scripts": {
+        "compile": "tsc -p ./ && npm run compile-renderer",
+        "compile-renderer": "esbuild src/Renderer/MermaidRenderer.ts --bundle --format=esm --minify --outfile=out/Renderer/MermaidRenderer.js",
+        "watch": "tsc -watch -p ./",
+        "package": "vsce package",
+        "pack-lib": "npm pack"
+    },
+    "files": [
+        "out/**",
+        "media/**",
+        "LICENSE",
+        "README.md"
+    ],
+    "devDependencies": {
+        "@types/node": "^20.10.0",
+        "@types/vscode": "^1.99.0",
+        "@types/vscode-notebook-renderer": "^1.72.0",
+        "esbuild": "^0.21.0",
+        "mermaid": "^10.9.0",
+        "typescript": "^5.3.0"
+    }
+}
