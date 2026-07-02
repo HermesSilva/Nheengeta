@@ -26,6 +26,7 @@ const MagicItems: XMagicItem[] = [
     { Magic: "markdown", Detail: "Markdown cell", Kind: vscode.CompletionItemKind.Value, Sort: "1markdown" },
     { Magic: "python", Detail: "Python cell (needs #!connect jupyter --kernel-name python)", Kind: vscode.CompletionItemKind.Value, Sort: "1python" },
     { Magic: "r", Detail: "R cell (needs #!connect jupyter --kernel-name r)", Kind: vscode.CompletionItemKind.Value, Sort: "1r" },
+    { Magic: "use", Detail: "Install packages for this cell's language (nuget/npm/pip/PSGallery/CRAN)", Kind: vscode.CompletionItemKind.Function, Sort: "2a-use" },
     { Magic: "set", Detail: "Share a variable between kernels", Kind: vscode.CompletionItemKind.Function, Sort: "2set" },
     { Magic: "import", Detail: "Run another notebook/script", Kind: vscode.CompletionItemKind.Function, Sort: "2import" },
     { Magic: "connect", Detail: "Connect a subkernel (mssql, kusto, jupyter…)", Kind: vscode.CompletionItemKind.Function, Sort: "2connect" },

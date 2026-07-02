@@ -27,6 +27,7 @@ export interface XVariableInfo {
 }
 
 import { EvaluateMath } from "../Math/MathEngine";
+import { XDependencyManager } from "./DependencyManager";
 
 export const NotebookType = "nheengeta";
 const SupportedLanguages = ["csharp", "fsharp", "powershell", "javascript", "sql", "kql", "html", "mermaid", "python", "r", "math"];
@@ -126,7 +127,7 @@ export class XNheengetaController {
 
     /** Run a JS cell in Node — the extension host binary in node mode, so no
      *  PATH dependency. Returns true on exit code 0. */
-    private async ExecuteJavaScript(pCode: string, pExecution: vscode.NotebookCellExecution): Promise<boolean> {
+    private async ExecuteJavaScript(pCode: string, pExecution: vscode.NotebookCellExecution, pEnv?: Record<string, string>): Promise<boolean> {
         const directory = path.join(os.tmpdir(), "nheengeta-run");
         await vscode.workspace.fs.createDirectory(vscode.Uri.file(directory));
         const file = path.join(directory, "cell.js");
@@ -135,7 +136,7 @@ export class XNheengetaController {
         return new Promise<boolean>((pResolve) => {
             const proc = spawn(process.execPath, [file], {
                 cwd: vscode.workspace.workspaceFolders?.[0]?.uri.fsPath,
-                env: { ...process.env, ELECTRON_RUN_AS_NODE: "1" },
+                env: { ...process.env, ELECTRON_RUN_AS_NODE: "1", ...pEnv },
                 windowsHide: true
             });
             let stdout = "";
@@ -211,7 +212,7 @@ export class XNheengetaController {
         await execution.clearOutput();
 
         try {
-            const code = pCell.document.getText();
+            let code = pCell.document.getText();
             const languageId = pCell.document.languageId;
 
             // Host subkernel (e.g. #!dase) takes precedence over the kernel.
@@ -222,6 +223,20 @@ export class XNheengetaController {
                     await execution.appendOutput(output);
                 execution.end(true, Date.now());
                 return;
+            }
+
+            // `#!use pkg` lines: resolve dependencies with the right package
+            // manager for the cell language, then run the remaining code.
+            let cellEnv: Record<string, string> | undefined;
+            if (/^[ \t]*#!use[ \t]/m.test(code)) {
+                const prepared = await XDependencyManager.Prepare(languageId, code);
+                code = prepared.Code;
+                cellEnv = prepared.Env;
+                if (prepared.Notes.length > 0) {
+                    await execution.appendOutput(new vscode.NotebookCellOutput([
+                        vscode.NotebookCellOutputItem.text(prepared.Notes.join("\n"), "text/plain")
+                    ]));
+                }
             }
 
             // Math cells evaluate in-process with mathjs; scope persists per
@@ -238,7 +253,7 @@ export class XNheengetaController {
             // The dotnet-interactive javascript kernel only executes in a
             // browser client, so stdio submissions to it always fail.
             if (languageId === "javascript") {
-                const ok = await this.ExecuteJavaScript(code, execution);
+                const ok = await this.ExecuteJavaScript(code, execution, cellEnv);
                 if (ok)
                     this._OnDidExecute.fire();
                 execution.end(ok, Date.now());

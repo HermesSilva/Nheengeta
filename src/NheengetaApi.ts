@@ -13,6 +13,7 @@ import { XCellCommands } from "./Core/CellCommands";
 import { XDebugCommands } from "./Core/DebugCommands";
 import { XVariablesView } from "./Core/VariablesView";
 import { XAiCommands } from "./Core/AiCommands";
+import { XDependencyManager } from "./Core/DependencyManager";
 
 export { XSubkernel, XSubkernelRegistry } from "./Core/SubkernelRegistry";
 export { NotebookType } from "./Core/NheengetaController";
@@ -42,6 +43,7 @@ Console.WriteLine("Nheengetá speaks!");
 
 /** Activate Nheengetá inside `pContext`. Idempotent per extension host. */
 export function ActivateNheengeta(pContext: vscode.ExtensionContext, pOptions?: XNheengetaOptions): XNheengetaApi {
+    XDependencyManager.Initialize(pContext);
     const subkernels = new XSubkernelRegistry();
     for (const subkernel of pOptions?.Subkernels ?? [])
         subkernels.Register(subkernel);
