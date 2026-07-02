@@ -304,15 +304,18 @@ export class XNheengetaController {
                 targetKernel = ".NET";
                 await this.EnsureConnectors(kernel, code, execution);
             }
-            else if (languageId === "sql" || languageId === "kql") {
-                // connected kernels are registered as sql-<name> / kql-<name>
+            else if (languageId === "sql" || languageId === "kql" || languageId === "python" || languageId === "r") {
+                // these languages need a #!connect first; route to the kernel it created
                 const connected = this._ConnectedKernels.get(languageId);
                 if (!connected) {
+                    const hints: Record<string, string> = {
+                        sql: 'No SQL connection yet. Run a cell with:\n#!connect mssql --kernel-name lab "Server=(localdb)\\MSSQLLocalDB;Integrated Security=true;TrustServerCertificate=true"',
+                        kql: 'No Kusto connection yet. Run a cell with:\n#!connect kusto --kernel-name mycluster --cluster "https://..." --database mydb',
+                        python: 'No Python connection yet. Needs a local Jupyter (pip install jupyter), then run a cell with:\n#!connect jupyter --kernel-name python --kernel-spec python3',
+                        r: 'No R connection yet. Needs a local Jupyter with IRkernel, then run a cell with:\n#!connect jupyter --kernel-name r --kernel-spec ir'
+                    };
                     await execution.appendOutput(new vscode.NotebookCellOutput([
-                        vscode.NotebookCellOutputItem.error(CleanError(
-                            languageId === "sql"
-                                ? 'No SQL connection yet. Run a cell with:\n#!connect mssql --kernel-name lab "Server=(localdb)\\MSSQLLocalDB;Integrated Security=true;TrustServerCertificate=true"'
-                                : 'No Kusto connection yet. Run a cell with:\n#!connect kusto --kernel-name mycluster --cluster "https://..." --database mydb'))
+                        vscode.NotebookCellOutputItem.error(CleanError(hints[languageId]))
                     ]));
                     execution.end(false, Date.now());
                     return;
@@ -333,10 +336,16 @@ export class XNheengetaController {
             if (result.Succeeded && targetKernel && targetKernel !== ".NET")
                 this._KernelsUsed.add(targetKernel);
             if (result.Succeeded && targetKernel === ".NET") {
-                // remember connections so sql/kql cells route to them
+                // remember connections so sql/kql/python/r cells route to them
                 for (const match of code.matchAll(/#!connect\s+(mssql|kusto)\s+[^\n]*?--kernel-name\s+(\S+)/g)) {
                     const prefix = match[1] === "mssql" ? "sql" : "kql";
                     this._ConnectedKernels.set(prefix, `${prefix}-${match[2]}`);
+                }
+                for (const match of code.matchAll(/#!connect\s+jupyter\s+[^\n]*?--kernel-name\s+(\S+)[^\n]*?--kernel-spec\s+(\S+)/g)) {
+                    // jupyter kernels keep the given name; language inferred from the spec
+                    const language = /^python/i.test(match[2]) ? "python" : /^(ir|r)\b/i.test(match[2]) ? "r" : undefined;
+                    if (language)
+                        this._ConnectedKernels.set(language, match[1]);
                 }
             }
             execution.end(result.Succeeded, Date.now());
